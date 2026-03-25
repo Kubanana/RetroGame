@@ -1,8 +1,7 @@
 #!/bin/bash
 
 mkdir build
-cd build
-cmake ..
-cmake --build .
-chmod +x debug/RetroGame
-./debug/RetroGame
+cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+cmake --build build
+./build/RetroGame
+
