@@ -96,29 +96,14 @@ void draw_sprite(uint32_t* frameBuffer, Sprite* sprite, int x, int y, int scale)
     }
 }
 
-void draw_player(uint32_t* frameBuffer, int x, int y, int scale, int direction, int frame)
+void draw_sprite_frame(uint32_t* frameBuffer, Sprite* sprite, int srcX, int srcY, int frameW, int frameH, int x, int y, int scale)
 {
-    int directionIndex = 0;
-
-    switch (direction)
+    for (int j = 0; j < frameH; j++)
     {
-        case DIR_DOWN: directionIndex = 0; break;
-        case DIR_RIGHT: directionIndex = 1; break;
-        case DIR_UP: directionIndex = 2; break;
-        case DIR_LEFT: directionIndex = 1; break;
-    }
-
-    int frameIndex = (directionIndex * FRAMES_PER_DIR + frame) * 16 * 16;
-    
-    int flip = (direction == DIR_LEFT);
-
-    for (int j = 0; j < 16; j++)
-    {
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < frameW; i++)
         {
-            int srcX = flip ? (16 - 1 - i) : i;
+            uint32_t color = sprite->pixels[(srcY + j) * sprite->width + (srcX + i)];
 
-            uint32_t color = player_sprite[frameIndex + j * 16 + srcX];
             if ((color >> 24) == 0) continue;
 
             for (int sy = 0; sy < scale; sy++)
@@ -133,6 +118,19 @@ void draw_player(uint32_t* frameBuffer, int x, int y, int scale, int direction, 
             }
         }
     }
+}
+
+void draw_player(uint32_t* frameBuffer, Sprite* sprite, Player* player, int scale)
+{
+    const int FRAME_W = 16;
+    const int FRAME_H = 16;
+
+    int row = player->state * 4 + player->direction;
+
+    int srcX = player->frame * FRAME_W;
+    int srcY = row * FRAME_H;
+
+    draw_sprite_frame(frameBuffer, sprite, srcX, srcY, FRAME_W, FRAME_H, (int)player->posX, (int)player->posY, scale);
 }
 
 void draw_tilemap(uint32_t* frameBuffer, Sprite* sprite, int tilemap[MAP_HEIGHT][MAP_WIDTH])

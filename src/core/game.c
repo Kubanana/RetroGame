@@ -1,16 +1,11 @@
 #include "game.h"
 #include <stdlib.h>
 
-float posX = 50;
-float posY = 50;
-
-Direction playerDirection = DIR_DOWN;
-
-int frame = 0;
-float animationTimer = 0;
+Sprite player_sprite;
 
 Sprite sprite1;
 Sprite brick_tile;
+Sprite boss;
 
 void run()
 {
@@ -18,6 +13,8 @@ void run()
     SDL_Renderer* renderer;
 
     bool running = true;
+
+    Player player = { 50, 50, DIR_DOWN, ANIM_IDLE, 0, 0 };
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -38,8 +35,11 @@ void run()
     int frames = 0;
     float fps = 0.0f;
     
+    player_sprite = load_sprite("assets/16x16 Idle-Sheet.png");
+
     sprite1 = load_sprite("assets/Sprite-0002.png");
     brick_tile = load_sprite("assets/Bricks.png");
+    boss = load_sprite("assets/ScaryBoss.png");
 
     int tilemap[MAP_HEIGHT][MAP_WIDTH] =
     {
@@ -100,27 +100,28 @@ void run()
         if (state[SDL_SCANCODE_D]) x += speed;
         if (state[SDL_SCANCODE_A]) x -= speed;
 
-        if (state[SDL_SCANCODE_W]) playerDirection = DIR_UP;
-        if (state[SDL_SCANCODE_S]) playerDirection = DIR_DOWN;
-        if (state[SDL_SCANCODE_D]) playerDirection = DIR_RIGHT;
-        if (state[SDL_SCANCODE_A]) playerDirection = DIR_LEFT;
+        if (state[SDL_SCANCODE_W]) player.direction = DIR_UP;
+        if (state[SDL_SCANCODE_S]) player.direction = DIR_DOWN;
+        if (state[SDL_SCANCODE_D]) player.direction = DIR_RIGHT;
+        if (state[SDL_SCANCODE_A]) player.direction = DIR_LEFT;
 
-        posX += x * delta;
-        posY += y * delta;
+        player.posX += x * delta;
+        player.posY += y * delta;
 
-        animationTimer += delta;
+        player.animationTimer += delta;
 
-        if (animationTimer >= 0.15f)
+        if (player.animationTimer >= 0.25f)
         {
-            animationTimer = 0.0f;
-            frame = (frame + 1) % FRAMES_PER_DIR;
+            player.animationTimer = 0.0f;
+            player.frame = (player.frame + 1) % 4;
         }
 
         clear(frameBuffer, 0xFF90D5FF);
         draw_tilemap(frameBuffer, &brick_tile, tilemap);
         draw_sprite(frameBuffer, &sprite1, 100, 100, 3);
-        draw_player(frameBuffer, (int)posX, (int)posY, 2, playerDirection, frame);
+        draw_player(frameBuffer, &player_sprite, &player, 2);
         draw_text(frameBuffer, "START GAME", 10, 10, 0xFFFFFFFF);
+        draw_sprite(frameBuffer, &boss, 100, 20, 8);
 
         char fps_text[16];
         sprintf(fps_text, "%.0f FPS", fps);

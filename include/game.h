@@ -9,17 +9,8 @@
 #include "font.h"
 #include "sprites.h"
 #include "tiles.h"
-
-#define WIDTH 256
-#define HEIGHT 256
-
-typedef enum
-{
-    DIR_DOWN,
-    DIR_RIGHT,
-    DIR_UP,
-    DIR_LEFT
-} Direction;
+#include "config.h"
+#include "player.h"
 
 void run();
 
