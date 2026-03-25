@@ -3,5 +3,6 @@
 mkdir build
 cd build
 cmake ..
-camke --build .
+cmake --build .
+chmod +x debug/RetroGame
 ./debug/RetroGame
