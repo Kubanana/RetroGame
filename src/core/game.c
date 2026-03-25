@@ -1,4 +1,5 @@
 #include "game.h"
+#include <stdlib.h>
 
 float posX = 50;
 float posY = 50;
@@ -118,7 +119,6 @@ void run()
         clear(frameBuffer, 0xFF90D5FF);
         draw_tilemap(frameBuffer, &brick_tile, tilemap);
         draw_sprite(frameBuffer, &sprite1, 100, 100, 3);
-        draw_sprite(frameBuffer, player_sprite, (int)posX, (int)posY, 2);
         draw_player(frameBuffer, (int)posX, (int)posY, 2, playerDirection, frame);
         draw_text(frameBuffer, "START GAME", 10, 10, 0xFFFFFFFF);
 

@@ -1,4 +1,5 @@
 #include "sprites.h"
+#include <stdlib.h>
 
 Sprite load_sprite(const char* path)
 {
