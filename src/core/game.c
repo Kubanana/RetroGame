@@ -7,6 +7,23 @@ Sprite sprite1;
 Sprite brick_tile;
 Sprite boss;
 
+static MIX_Mixer* mixer = NULL;
+static MIX_Audio* music = NULL;
+
+void play_music(const char* filePath)
+{   
+    SDL_AudioDeviceID devid = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
+
+    mixer = MIX_CreateMixerDevice(devid, NULL);
+    music = MIX_LoadAudio(mixer, filePath, true);
+    MIX_Track* track = MIX_CreateTrack(mixer);
+
+    MIX_SetTrackAudio(track, music);
+    MIX_SetTrackGain(track, 0.2f);
+    MIX_SetTrackLoops(track, -1);
+    MIX_PlayTrack(track, 0);
+}
+
 void run()
 {
     SDL_Window* window;
@@ -16,7 +33,8 @@ void run()
 
     Player player = { 50, 50, DIR_DOWN, ANIM_IDLE, 0, 0 };
 
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    MIX_Init();
 
     SDL_CreateWindowAndRenderer("Cool", WIDTH * 3, HEIGHT * 3,
          SDL_WINDOW_RESIZABLE, &window, &renderer);
@@ -40,6 +58,8 @@ void run()
     sprite1 = load_sprite("assets/Sprite-0002.png");
     brick_tile = load_sprite("assets/Bricks.png");
     boss = load_sprite("assets/ScaryBoss.png");
+
+    play_music("assets/bosstheme.ogg");
 
     int tilemap[MAP_HEIGHT][MAP_WIDTH] =
     {
