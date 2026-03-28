@@ -9,6 +9,7 @@ Sprite boss;
 
 static MIX_Mixer* mixer = NULL;
 static MIX_Audio* music = NULL;
+static MIX_Track* track = NULL;
 
 void play_music(const char* filePath)
 {   
@@ -16,12 +17,17 @@ void play_music(const char* filePath)
 
     mixer = MIX_CreateMixerDevice(devid, NULL);
     music = MIX_LoadAudio(mixer, filePath, true);
-    MIX_Track* track = MIX_CreateTrack(mixer);
+    track = MIX_CreateTrack(mixer);
 
     MIX_SetTrackAudio(track, music);
     MIX_SetTrackGain(track, 0.2f);
-    MIX_SetTrackLoops(track, -1);
-    MIX_PlayTrack(track, 0);
+
+    SDL_PropertiesID properties = SDL_CreateProperties();
+    SDL_SetNumberProperty(properties, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+
+    MIX_PlayTrack(track, properties);
+
+    SDL_DestroyProperties(properties);
 }
 
 void run()
