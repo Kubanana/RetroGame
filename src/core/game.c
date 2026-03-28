@@ -24,6 +24,7 @@ void play_music(const char* filePath)
 
     SDL_PropertiesID properties = SDL_CreateProperties();
     SDL_SetNumberProperty(properties, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+    SDL_SetNumberProperty(properties, MIX_PROP_PLAY_FADE_IN_MILLISECONDS_NUMBER, 200);
 
     MIX_PlayTrack(track, properties);
 
